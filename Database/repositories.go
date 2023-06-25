@@ -3,8 +3,9 @@ package Database
 import (
 	DBUtil "GitHub-Analytics-Tracker/Database/Util"
 	"GitHub-Analytics-Tracker/Util"
-	"gorm.io/gorm"
 	"log"
+
+	"gorm.io/gorm"
 )
 
 var (
@@ -56,12 +57,29 @@ func mustSetupDevEnv(db *gorm.DB) {
 	if err != nil {
 		panic(err)
 	}
+	mustCleanUpDevTables(db)
 	mustLoadDevRepo(db)
 }
 
 // mustCleanUpDevRepo deletes the devRepo record from the db and panics if it is unable to do so
 func mustCleanUpDevRepo(devRepo *Repository, db *gorm.DB) {
 	Result := db.Delete(devRepo)
+	if Result.Error != nil {
+		log.Panic(Result.Error)
+	}
+}
+
+func mustCleanUpDevTables(db *gorm.DB) {
+	session := db.Session(&gorm.Session{AllowGlobalUpdate: true})
+	Result := session.Delete(&CloneInstance{})
+	if Result.Error != nil {
+		log.Panic(Result.Error)
+	}
+	Result = session.Delete(&ReferralPath{})
+	if Result.Error != nil {
+		log.Panic(Result.Error)
+	}
+	Result = session.Delete(&ReferralSource{})
 	if Result.Error != nil {
 		log.Panic(Result.Error)
 	}
@@ -87,6 +105,16 @@ func MustSetupDB(stage Util.Stage) *gorm.DB {
 		panic(err)
 	}
 	err = migrateCloneInstance(db)
+	if err != nil {
+		panic(err)
+	}
+
+	err = migrateReferralSource(db)
+	if err != nil {
+		panic(err)
+	}
+
+	err = migrateReferralPaths(db)
 	if err != nil {
 		panic(err)
 	}

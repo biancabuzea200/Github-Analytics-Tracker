@@ -1,14 +1,17 @@
 package GitHub
 
 import (
-	"GitHub-Analytics-Tracker/Database"
-	"GitHub-Analytics-Tracker/GitHub/GithubAuth"
 	"context"
+	"sync"
+
 	"github.com/google/go-github/v53/github"
 	"gorm.io/gorm"
-	"sync"
+
+	"GitHub-Analytics-Tracker/Database"
+	"GitHub-Analytics-Tracker/GitHub/GithubAuth"
 )
 
+// WillGetClones will retireve the clones for the supples github repository and will retry until successful (TODO better retry logic)
 func WillGetClones(connection *GithubAuth.Connection, wg *sync.WaitGroup, db *gorm.DB) {
 	defer wg.Done()
 	var cloneData []*Database.CloneInstance
@@ -31,8 +34,10 @@ func WillGetClones(connection *GithubAuth.Connection, wg *sync.WaitGroup, db *go
 	WillInsertCloneData(cloneData, db)
 }
 
+// WillInsertCloneData is garuanteed to make the Database.CloneInstance database insert or it will get stuck in an infinite loop
 func WillInsertCloneData(data []*Database.CloneInstance, db *gorm.DB) {
 	result := db.Create(&data)
+	//TODO better error handling
 	for result.Error != nil {
 		result = db.Create(&data)
 	}

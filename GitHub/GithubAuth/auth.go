@@ -1,14 +1,16 @@
 package GithubAuth
 
 import (
-	"GitHub-Analytics-Tracker/Database"
-	"GitHub-Analytics-Tracker/Util"
 	"context"
 	"fmt"
+	"sync"
+
 	"github.com/google/go-github/v53/github"
 	"golang.org/x/oauth2"
 	"gorm.io/gorm"
-	"sync"
+
+	"GitHub-Analytics-Tracker/Database"
+	"GitHub-Analytics-Tracker/Util"
 )
 
 var (
@@ -75,6 +77,7 @@ func mustCreateValidConnection(repository *Database.Repository, wg *sync.WaitGro
 	}
 }
 
+// GetByID is used to ensure that the client created through auth is valid by sending a simple API request and checking that it works
 func validateClient(client *github.Client) error {
 	_, _, err := client.Repositories.GetByID(context.Background(), 1)
 	return err

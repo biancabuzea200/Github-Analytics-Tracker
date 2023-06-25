@@ -3,9 +3,10 @@ package Util
 import (
 	"errors"
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 // Stage represents the environment the tracker is being run in (e.g. dev, prod, staging etc.)
@@ -13,10 +14,12 @@ type Stage string
 
 const (
 	Unset Stage = ""
-	Dev   Stage = "DEV"
+	// Dev describes a local development environment
+	Dev Stage = "DEV"
 )
 
 var (
+	// UnsetENVError occurs when a required env varibale is not set (=="")
 	UnsetENVError = errors.New("variable not set")
 )
 
@@ -34,6 +37,7 @@ func GetENV(key string) (string, error) {
 	return env, nil
 }
 
+// GetStage retureves the stage environment variable
 func GetStage() (Stage, error) {
 	val, err := GetENV("STAGE")
 	return Stage(val), err
