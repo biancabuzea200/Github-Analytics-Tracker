@@ -15,7 +15,7 @@ DEV_REPO=[YOUR_REPO_NAME]
 
 DEV_REPO_API_KEY=[YOUR_GITHUB_PERSONAL_ACCESS_TOKEN]
 
-2. run go run main.go  
+2. run: go run main.go  
 
 **Description**
 
