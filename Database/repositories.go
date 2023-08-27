@@ -3,8 +3,9 @@ package Database
 import (
 	DBUtil "GitHub-Analytics-Tracker/Database/Util"
 	"GitHub-Analytics-Tracker/Util"
-	"gorm.io/gorm"
 	"log"
+
+	"gorm.io/gorm"
 )
 
 var (

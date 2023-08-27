@@ -3,10 +3,9 @@ package Util
 import (
 	"errors"
 	"fmt"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 // Stage represents the environment the tracker is being run in (e.g. dev, prod, staging etc.)
